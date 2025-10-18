@@ -1,0 +1,28 @@
+uvicorn is the webserver we use to start a FastApi application
+
+To run fastAPI application
+    uvicorn books:app --reload
+    fastapi dev books.py
+    fastapi run books.py
+    
+
+Code flow in fastAPI ---> Top to bottom
+
+
+path parameter  --> are request parameter that have been attached to URL
+                --> defined as a way to find info based on location
+                --> Variables that are part of the API URL
+                --> %20 in URL means space character
+
+query parameter --> request parameter attached after '?'
+                --> can be used along with path parameters
+                --> query parameters are indeed used to sort and filter data that isn't specified within the path parameters of the API URL. 
+
+.casefold()     --> handles Unicode characters better:
+                   Eg print("straße".lower())    # → "straße"
+                      print("straße".casefold()) # → "strasse"
+
+###Order of function written matters
+if read_books_by_author_path fn written below read_author_category_by_query it will not work as the api call will get captured by read_author_category_by_query and one parameter is missing
+
+So, smaller API should be in the Top
