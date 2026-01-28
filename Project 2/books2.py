@@ -13,14 +13,16 @@ class Book:
     description: str
     rating: int
     published_date: int
+    jounre: str
 
-    def __init__(self, id, title, author, description, rating, published_date):
+    def __init__(self, id, title, author, description, rating, published_date, jounre):
         self.id = id
         self.title = title
         self.author = author
         self.description = description
         self.rating = rating
         self.published_date = published_date
+        self.jounre = jounre
 
 
 class BookRequest(BaseModel):
@@ -29,7 +31,8 @@ class BookRequest(BaseModel):
     author: str = Field(min_length=1)
     description: str = Field(min_length=1, max_length=100)
     rating: int = Field(gt=0, lt=6)
-    published_date: int = Field(gt=1999, lt=2031)
+    published_date: int = Field(gt=1999, lt=2031) 
+    jounre: str = Field(default="Science Fiction")
 
     model_config = {
         "json_schema_extra": {
@@ -38,7 +41,8 @@ class BookRequest(BaseModel):
                 "author": "codingwithroby",
                 "description": "A new description of a book",
                 "rating": 5,
-                'published_date': 2029
+                'published_date': 2029,
+                "jounre": "Science Fiction"
             }
         }
     }
@@ -47,14 +51,17 @@ class BookRequest(BaseModel):
 
 
 BOOKS = [
-    Book(1, 'Computer Science Pro', 'codingwithroby', 'A very nice book!', 5, 2030),
-    Book(2, 'Be Fast with FastAPI', 'codingwithroby', 'A great book!', 5, 2030),
-    Book(3, 'Master Endpoints', 'codingwithroby', 'A awesome book!', 5, 2029),
-    Book(4, 'HP1', 'Author 1', 'Book Description', 2, 2028),
-    Book(5, 'HP2', 'Author 2', 'Book Description', 3, 2027),
-    Book(6, 'HP3', 'Author 3', 'Book Description', 1, 2026)
+    Book(1, 'Computer Science Pro', 'codingwithroby', 'A very nice book!', 5, 2030, "Adventure"),
+    Book(2, 'Be Fast with FastAPI', 'codingwithroby', 'A great book!', 5, 2030, "Education"),
+    Book(3, 'Master Endpoints', 'codingwithroby', 'A awesome book!', 5, 2029, "Technology"),
+    Book(4, 'HP1', 'Author 1', 'Book Description', 2, 2028, "Fantasy"),
+    Book(5, 'HP2', 'Author 2', 'Book Description', 3, 2027, "Fantasy"),
+    Book(6, 'HP3', 'Author 3', 'Book Description', 1, 2026, "Thriller"),
 ]
 
+@app.get("/", status_code=status.HTTP_200_OK)
+async def read_all():
+    return {"Hello": "World ASH World"}
 
 @app.get("/books", status_code=status.HTTP_200_OK)
 async def read_all_books():
@@ -78,12 +85,19 @@ async def read_book_by_rating(book_rating: int = Query(gt=0, lt=6)):
     return books_to_return
 
 
-
 @app.get("/books/publish/", status_code=status.HTTP_200_OK)
 async def read_books_by_publish_date(published_date: int = Query(gt=1999, lt=2031)):
     books_to_return = []
     for book in BOOKS:
         if book.published_date == published_date:
+            books_to_return.append(book)
+    return books_to_return
+
+@app.get("/books/jounre/", status_code=status.HTTP_200_OK)
+async def read_books_by_jounre(jounre: str = Query(min_length=1)):
+    books_to_return = []
+    for book in BOOKS:
+        if book.jounre.casefold() == jounre.casefold():
             books_to_return.append(book)
     return books_to_return
 

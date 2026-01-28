@@ -3,7 +3,7 @@ uvicorn is the webserver we use to start a FastApi application
 To run fastAPI application
     uvicorn books:app --reload
     fastapi dev books.py
-    fastapi run books.py
+    fastapi run books.py 
     
 
 Code flow in fastAPI ---> Top to bottom

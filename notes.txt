@@ -4,9 +4,3 @@ deactivate --> to deactivate from env
     
 pip install fastapi
 pip install "uvicorn[standard]"
-
-
-
-
-
-
